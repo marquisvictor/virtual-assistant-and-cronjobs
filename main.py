@@ -1,23 +1,12 @@
-# import speech_recognition as sr
-# import pyaudio
-
-# listener = sr.Recognizer()
-
-# try:
-#     with sr.Microphone() as source:
-#         print("LISTENING YOU DUMB FUCK")
-#         # voice = listener.listen(source)
-#         # command = listener.recognize_google(voice)
-#         # print(command)
-# except:
-#     pass
-
-# # p = pyaudio.PyAudio()
-
 from ctypes import CFUNCTYPE, cdll, c_char_p, c_int, c_char_p, c_int, c_char_p
 from contextlib import contextmanager
 import pyaudio
 import speech_recognition as sr
+import pyttsx3
+import pywhatkit
+import datetime
+import wikipedia
+import pyjokes
 
 ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int,
                                c_char_p)
@@ -40,6 +29,16 @@ def noalsaerr():
 
 listener = sr.Recognizer()
 
+engine = pyttsx3.init()
+voices = engine.getProperty('voices')
+engine.setProperty('voice', voices[0].id)
+
+
+def talk(text):
+    engine.say(text)
+    engine.runAndWait()
+
+
 with noalsaerr():
     try:
         with sr.Microphone() as source:
@@ -50,5 +49,6 @@ with noalsaerr():
             if 'alexa' in command:
                 command = command.replace('alexa', '')
                 print(command)
+                talk(command)
     except:
         pass
